@@ -2,7 +2,7 @@
 ======
 
 * [高效索引和搜索](/docs/benchmarking.md)（1M条微博500M数据28秒索引完，1.65毫秒搜索响应时间，19K搜索QPS）
-* 支持中文分词（使用[sego分词包](https://github.com/huichen/sego)并发分词，速度27MB/秒）
+* 支持中文分词（使用[sego分词包](https://github.com/MoSunDay/sego)并发分词，速度27MB/秒）
 * 支持计算关键词在文本中的[紧邻距离](/docs/token_proximity.md)（token proximity）
 * 支持计算[BM25相关度](/docs/bm25.md)
 * 支持[自定义评分字段和评分规则](/docs/custom_scoring_criteria.md)
@@ -16,7 +16,7 @@
 # 安装/更新
 
 ```
-go get -u -v github.com/huichen/wukong
+go get -u -v github.com/MoSunDay/wukong
 ```
 
 需要Go版本至少1.1.1
@@ -28,8 +28,8 @@ go get -u -v github.com/huichen/wukong
 package main
 
 import (
-	"github.com/huichen/wukong/engine"
-	"github.com/huichen/wukong/types"
+	"github.com/MoSunDay/wukong/engine"
+	"github.com/MoSunDay/wukong/types"
 	"log"
 )
 
@@ -41,7 +41,7 @@ var (
 func main() {
 	// 初始化
 	searcher.Init(types.EngineInitOptions{
-		SegmenterDictionaries: "github.com/huichen/wukong/data/dictionary.txt"})
+		SegmenterDictionaries: "github.com/MoSunDay/wukong/data/dictionary.txt"})
 	defer searcher.Close()
 
 	// 将文档加入索引，docId 从1开始

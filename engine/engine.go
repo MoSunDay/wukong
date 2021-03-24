@@ -2,12 +2,6 @@ package engine
 
 import (
 	"fmt"
-	"github.com/huichen/murmur"
-	"github.com/huichen/sego"
-	"github.com/huichen/wukong/core"
-	"github.com/huichen/wukong/storage"
-	"github.com/huichen/wukong/types"
-	"github.com/huichen/wukong/utils"
 	"log"
 	"os"
 	"runtime"
@@ -15,6 +9,13 @@ import (
 	"strconv"
 	"sync/atomic"
 	"time"
+
+	"github.com/MoSunDay/murmur"
+	"github.com/MoSunDay/sego"
+	"github.com/MoSunDay/wukong/core"
+	"github.com/MoSunDay/wukong/storage"
+	"github.com/MoSunDay/wukong/types"
+	"github.com/MoSunDay/wukong/utils"
 )
 
 const (
@@ -230,7 +231,7 @@ func (engine *Engine) Init(options types.EngineInitOptions) {
 func (engine *Engine) IndexDocument(docId uint64, data types.DocumentIndexData, forceUpdate bool) {
 	engine.internalIndexDocument(docId, data, forceUpdate)
 
-	hash := murmur.Murmur3([]byte(fmt.Sprint("%d", docId))) % uint32(engine.initOptions.PersistentStorageShards)
+	hash := murmur.Murmur3([]byte(fmt.Sprintf("%d", docId))) % uint32(engine.initOptions.PersistentStorageShards)
 	if engine.initOptions.UsePersistentStorage && docId != 0 {
 		engine.persistentStorageIndexDocumentChannels[hash] <- persistentStorageIndexDocumentRequest{docId: docId, data: data}
 	}
@@ -248,7 +249,7 @@ func (engine *Engine) internalIndexDocument(
 	if forceUpdate {
 		atomic.AddUint64(&engine.numForceUpdatingRequests, 1)
 	}
-	hash := murmur.Murmur3([]byte(fmt.Sprint("%d%s", docId, data.Content)))
+	hash := murmur.Murmur3([]byte(fmt.Sprintf("%d%s", docId, data.Content)))
 	engine.segmenterChannel <- segmenterRequest{
 		docId: docId, hash: hash, data: data, forceUpdate: forceUpdate}
 }
@@ -284,7 +285,7 @@ func (engine *Engine) RemoveDocument(docId uint64, forceUpdate bool) {
 
 	if engine.initOptions.UsePersistentStorage && docId != 0 {
 		// 从数据库中删除
-		hash := murmur.Murmur3([]byte(fmt.Sprint("%d", docId))) % uint32(engine.initOptions.PersistentStorageShards)
+		hash := murmur.Murmur3([]byte(fmt.Sprintf("%d", docId))) % uint32(engine.initOptions.PersistentStorageShards)
 		go engine.persistentStorageRemoveDocumentWorker(docId, hash)
 	}
 }
