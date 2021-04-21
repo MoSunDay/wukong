@@ -1,8 +1,6 @@
 package storage
 
 import (
-	"leveldb/opt"
-
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/filter"
 	"github.com/syndtr/goleveldb/leveldb/opt"
@@ -22,7 +20,7 @@ func OpenLeveldbStorage(path string) (Storage, error) {
 }
 
 func (s *leveldbStorage) WALName() string {
-	return string{} //对于此数据库，本函数没什么卵用~
+	return "null"
 }
 
 func (s *leveldbStorage) Set(k, v []byte) error {
