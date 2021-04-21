@@ -12,7 +12,7 @@ type leveldbStorage struct {
 
 func OpenLeveldbStorage(path string) (Storage, error) {
 
-	if db, err := leveldb.OpenFile(path, &opt.Options{Filter: filter.NewBloomFilter(10)}); err != nil {
+	if db, err := leveldb.OpenFile(path, &opt.Options{Filter: filter.NewBloomFilter(1000)}); err != nil {
 		return nil, err
 	} else {
 		return &leveldbStorage{db}, nil
